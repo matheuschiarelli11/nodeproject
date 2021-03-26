@@ -22,7 +22,7 @@ class UserController {
       password: await bcrypt.hash(password, 8),
     });
 
-    return res.status(200).json({ message: "Usuário criado" });
+    return res.status(200).json(newUser);
   }
 
   async show(req, res) {
