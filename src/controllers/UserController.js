@@ -31,7 +31,7 @@ class UserController {
       password: await bcrypt.hash(password, 8),
     });
 
-    return res.status(200).json(newUser);
+    return res.status(200).json({ user: newUser });
   }
 
   async show(req, res) {
@@ -45,9 +45,10 @@ class UserController {
   }
 
   async update(req, res) {
-    const { email, name, password, newPass } = req.body;
+    const { name, password } = req.body;
+    const { id } = req.params;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { id } });
 
     if (!user) {
       return res.status(400).json({ message: "Usuário inexistente." });
@@ -57,27 +58,23 @@ class UserController {
       user.name = name;
     }
 
-    if (email) {
-      user.email = email;
-    }
-
-    if (password && newPass) {
+    if (password) {
       console.log(password, user.password);
       if (!(await bcrypt.compare(password, user.password))) {
         return res.status(401).json({ message: "Credenciais incorretas." });
       }
-      user.password = newPass;
+      await user.save();
     }
-
-    await user.save();
 
     return res.status(200).json(user);
   }
 
   async delete(req, res) {
-    const { email } = req.body;
+    const { id } = req.params;
 
-    const user = await User.destroy({ where: { email } });
+    console.log(id);
+
+    const user = await User.destroy({ where: { id } });
 
     if (!user) {
       return res.status(401).json({ message: "Usuário não existe" });

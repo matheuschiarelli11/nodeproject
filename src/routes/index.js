@@ -7,8 +7,8 @@ const routes = new Router();
 
 routes.get("/user", UserController.show);
 routes.post("/user", UserController.index);
-routes.put("/user", authMiddleware, UserController.update);
-routes.delete("/user", UserController.delete);
+routes.put("/user/:id", authMiddleware, UserController.update);
+routes.delete("/user/:id", UserController.delete);
 
 routes.post("/session", SessionController.store);
 
