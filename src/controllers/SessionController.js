@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import authConfig from "../config/auth";
 import User from "../models/User";
+import userInfo from "../models/userInfo";
 
 class SessionController {
   async store(req, res) {
@@ -17,6 +18,10 @@ class SessionController {
     }
 
     const { id, name } = user;
+
+    await userInfo.create({
+      user_id: id,
+    });
 
     return res.json({
       user: {
