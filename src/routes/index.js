@@ -15,5 +15,6 @@ routes.post("/session", SessionController.store);
 
 routes.get("/info/:id", UserDateController.info);
 routes.get("/info", UserDateController.todayInfo);
+routes.get("/infoM", UserDateController.monthInfo);
 
 export default routes;

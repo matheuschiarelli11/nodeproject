@@ -51,6 +51,40 @@ class UserDateController {
 
     return res.status(200).json({ days, loginQty });
   }
+
+  async monthInfo(req, res) {
+    const { created_at } = req.params;
+
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+
+    const startDate = new Date(year, month, 0, 0, 0, 0);
+
+    const logins = await userInfo.findAll({
+      where: { created_at: { [Op.between]: [startDate, new Date()] } },
+    });
+
+    const months = [];
+    const loginQty = [];
+
+    for (let i = 0; i < logins.length; i++) {
+      const login = logins[i].get({ plain: true });
+
+      const month = format(new Date(login.createdAt), "MM");
+
+      const index = months.indexOf(month);
+
+      if (index < 0) {
+        months.push(month);
+
+        const lastPosition = months.length - 1;
+        loginQty[lastPosition] = 1;
+      } else {
+        loginQty[index] += 1;
+      }
+    }
+    return res.status(200).json({ months, loginQty });
+  }
 }
 
 export default new UserDateController();
