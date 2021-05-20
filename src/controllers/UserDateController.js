@@ -3,18 +3,9 @@ import { Op } from "sequelize";
 import { format } from "date-fns";
 
 class UserDateController {
-  async info(req, res) {
-    const { user_id, created_at, updated_at } = req.params;
-
-    const findInfo = await userInfo.findOne(user_id, created_at, updated_at);
-
-    if (findInfo) {
-      return res.status(200).json(findInfo);
-    }
-  }
-
   async todayInfo(req, res) {
     const { created_at } = req.params;
+    const user_id = req.user.id;
 
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
@@ -25,7 +16,10 @@ class UserDateController {
     console.log(startDate);
 
     const logins = await userInfo.findAll({
-      where: { created_at: { [Op.between]: [startDate, new Date()] } },
+      where: {
+        user_id: user_id,
+        created_at: { [Op.between]: [startDate, new Date()] },
+      },
     });
 
     const days = [];
@@ -54,6 +48,7 @@ class UserDateController {
 
   async monthInfo(req, res) {
     const { created_at } = req.params;
+    const user_id = req.user.id;
 
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
@@ -61,7 +56,10 @@ class UserDateController {
     const startDate = new Date(year, month, 0, 0, 0, 0);
 
     const logins = await userInfo.findAll({
-      where: { created_at: { [Op.between]: [startDate, new Date()] } },
+      where: {
+        user_id: user_id,
+        created_at: { [Op.between]: [startDate, new Date()] },
+      },
     });
 
     const months = [];

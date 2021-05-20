@@ -13,8 +13,7 @@ routes.delete("/user/:id", UserController.delete);
 
 routes.post("/session", SessionController.store);
 
-routes.get("/info/:id", UserDateController.info);
-routes.get("/info", UserDateController.todayInfo);
-routes.get("/infoM", UserDateController.monthInfo);
+routes.get("/days", authMiddleware, UserDateController.todayInfo);
+routes.get("/months", authMiddleware, UserDateController.monthInfo);
 
 export default routes;
